@@ -14,13 +14,13 @@ public class PublicationsService {
     private PublicationsRepository publicationsRepository;
 
     // Операція додавання
-    public void addPublication(Publications publication) {
-        publicationsRepository.save(publication);
+    public Publications addPublication(Publications publication) {
+        return publicationsRepository.save(publication);
     }
 
     // Операція перегляду за id
     public Publications getPublicationById(int id) {
-        return publicationsRepository.findById(id);
+        return publicationsRepository.findById(id).orElse(null);
     }
 
     // Операція перегляду повного переліку
@@ -33,15 +33,14 @@ public class PublicationsService {
         publicationsRepository.deleteById(id);
     }
 
-    // Операція видалення повного переліку
-    public void deleteAllPublications() {
-        publicationsRepository.deleteAll();
-    }
-
     // Операція модифікації за id
-    public void updatePublication(int id, Publications publication) {
-        publication.setId(id);
-        publicationsRepository.saveAndFlush(publication);
+    public Publications updatePublication(int id, Publications publication) {
+        if (publicationsRepository.existsById(id)) {
+            publication.setId(id);
+            return publicationsRepository.saveAndFlush(publication);
+        } else {
+            return null;
+        }
     }
 
     // Операція перегляду за автором

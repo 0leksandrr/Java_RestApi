@@ -1,7 +1,7 @@
 package com.labkaa.labdemo;
 
 import com.labkaa.labdemo.model.Publications;
-import com.labkaa.labdemo.repo.PublicationsRepository;
+import com.labkaa.labdemo.service.PublicationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,54 +12,47 @@ import java.util.List;
 public class PublicationsController {
 
     @Autowired
-    private PublicationsRepository publicationsRepository;
+    private PublicationsService publicationsService;
 
     // Операція додавання
     @PostMapping("/add")
-    public void addPublication(@RequestBody Publications publication) {
-        publicationsRepository.save(publication);
+    public Publications addPublication(@RequestBody Publications publication) {
+        return publicationsService.addPublication(publication);
     }
 
     // Операція перегляду за id
     @GetMapping("/{id}")
     public Publications getPublicationById(@PathVariable int id) {
-        return publicationsRepository.findById(id);
+        return publicationsService.getPublicationById(id);
     }
 
     // Операція перегляду повного переліку
     @GetMapping
     public List<Publications> getAllPublications() {
-        return publicationsRepository.findAll();
+        return publicationsService.getAllPublications();
     }
 
     // Операція видалення за id
     @DeleteMapping("/{id}")
     public void deletePublicationById(@PathVariable int id) {
-        publicationsRepository.deleteById(id);
-    }
-
-    // Операція видалення повного переліку
-    @DeleteMapping
-    public void deleteAllPublications() {
-        publicationsRepository.deleteAll();
+        publicationsService.deletePublicationById(id);
     }
 
     // Операція модифікації за id
     @PutMapping("/{id}")
-    public void updatePublication(@PathVariable int id, @RequestBody Publications publication) {
-        publication.setId(id);
-        publicationsRepository.saveAndFlush(publication);
+    public Publications updatePublication(@PathVariable int id, @RequestBody Publications publication) {
+        return publicationsService.updatePublication(id, publication);
     }
 
     // Операція перегляду за автором
     @GetMapping("/author/{author}")
     public List<Publications> getPublicationsByAuthor(@PathVariable String author) {
-        return publicationsRepository.findByAuthor(author);
+        return publicationsService.getPublicationsByAuthor(author);
     }
 
     // Операція перегляду за видавництвом
     @GetMapping("/publisher/{publisher}")
     public List<Publications> getPublicationsByPublisher(@PathVariable String publisher) {
-        return publicationsRepository.findByPublisher(publisher);
+        return publicationsService.getPublicationsByPublisher(publisher);
     }
 }
